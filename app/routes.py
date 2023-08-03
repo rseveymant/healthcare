@@ -1,9 +1,17 @@
 from flask import render_template, request, send_file
 from .utils.gpt_service import GPTService
+from .utils.code_mapper import ICD10Generator
 import io
 from io import BytesIO
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+MANTIUM_CLIENT_ID = os.getenv("MANTIUM_CLIENT_ID")
+MANTIUM_SECRET = os.getenv("MANTIUM_SECRET")
 
 gpt_service = GPTService()
+icd10_generator = ICD10Generator(MANTIUM_CLIENT_ID, MANTIUM_SECRET, gpt_service)
 
 def setup_routes(app):
     @app.route('/', methods=['GET', 'POST'])
@@ -36,3 +44,25 @@ def setup_routes(app):
             return send_file(mem, as_attachment=True, download_name='prior_authorization.txt', mimetype='text/plain')
 
         return render_template('prior_auth_form.html')
+
+    @app.route('/generate_billing_codes', methods=['GET', 'POST'])
+    def generate_billing_codes():
+        if request.method == 'POST':
+            diagnosis = request.form.get('diagnosis', '')
+            procedures = request.form.get('procedures', '')
+            medical_history = request.form.get('medical_history', '')
+            clinical_notes = request.form.get('clinical_notes', '')
+
+            # Prepare the initial GPT prompt
+            initial_prompt = f"Combine the following information into a good query to find the right ICD-10 code. The query will be sent to a vector database:\n\nDiagnosis: {diagnosis}\nProcedures: {procedures}\nMedical History: {medical_history}\nClinical Notes: {clinical_notes}"
+
+            # Generate a query for Mantium RAG model
+            rag_query = gpt_service.generate(initial_prompt)
+
+            # Generate a billing code from the query
+            billing_code = icd10_generator.generate(rag_query)
+
+            # Render the results
+            return render_template('billing_codes.html', billing_code=billing_code)
+
+        return render_template('billing_codes_form.html')
