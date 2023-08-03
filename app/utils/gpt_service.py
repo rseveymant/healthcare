@@ -1,10 +1,19 @@
-from openai import GPT
-from openai.api_resources.completion import Completion
+import openai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
 
 class GPTService:
     def __init__(self):
-        self.gpt = GPT(engine="text-davinci-003")  # Specify your engine here
+        openai.api_key = os.getenv("OPENAI_API_KEY")
 
     def generate(self, prompt):
-        response = Completion.create(engine=self.gpt, prompt=prompt, max_tokens=100)  # Specify your parameters here
-        return response.choices[0].text.strip()
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # or whatever model you want to use
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return response['choices'][0]['message']['content']

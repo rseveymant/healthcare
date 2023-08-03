@@ -1,7 +1,10 @@
 from flask import Flask
+from .routes import setup_routes
 
 def create_app():
     app = Flask(__name__)
-    from app import routes
+
+    # This function will set up the routes
+    setup_routes(app)
 
     return app
