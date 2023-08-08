@@ -5,6 +5,7 @@
 </head>
 <body>
     <h1>Review Results</h1>
+    
     {% if errors %}
     <h2>Identified Errors:</h2>
     <ul>
@@ -14,6 +15,31 @@
     </ul>
     {% else %}
     <p>No errors identified.</p>
+    {% endif %}
+
+    <h2>GPT Outputs:</h2>
+    <ul>
+        {% for field, output in gpt_outputs.items() %}
+            <li><strong>{{ field }}:</strong> {{ output }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if correct_codes %}
+    <h2>Correct Codes:</h2>
+    <ul>
+        {% for code in correct_codes %}
+            <li>{{ code }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if mismatched_codes %}
+    <h2>Mismatched Codes:</h2>
+    <ul>
+        {% for code in mismatched_codes %}
+            <li>{{ code }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
 </body>
 </html>

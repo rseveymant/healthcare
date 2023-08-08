@@ -84,7 +84,7 @@ def setup_routes(app):
             billing_codes_list = [code.strip() for code in billing_codes_input.split(',')]
 
             # Perform code review
-            errors, correct_codes, mismatched_codes = code_reviewer.review(billing_codes_list, {
+            errors, gpt_outputs, mismatched_codes, correct_codes = code_reviewer.review(billing_codes_list, {
                 'diagnosis': diagnosis,
                 'procedures': procedures,
                 'medical_history': medical_history,
@@ -92,6 +92,6 @@ def setup_routes(app):
             })
 
             # Render the results along with the errors
-            return render_template('code_review_results.html', errors=errors, correct_codes=correct_codes, mismatched_codes=mismatched_codes)
+            return render_template('code_review_results.html', errors=errors, gpt_outputs=gpt_outputs, mismatched_codes=mismatched_codes, correct_codes=correct_codes)
 
         return render_template('code_review_form.html')
