@@ -15,7 +15,7 @@ class ICD10Generator:
     def generate(self, input_text):
         print(input_text)
         # Step 1: Use Mantium's RAG model to generate ICD-10 candidates
-        rag_candidates = self.apps_api.query_application('64cc1bcca95c216d0358e859', dict(query=input_text, retriever_top_k=1))
+        rag_candidates = self.apps_api.query_application('64cc1bcca95c216d0358e859', dict(query=input_text, retriever_top_k=4))
 
         # Step 2: Refine candidates using GPT model
         print(rag_candidates['documents'][0]['content'])

@@ -10,7 +10,7 @@ class GPTService:
 
     def generate(self, prompt):
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # or whatever model you want to use
+            model="gpt-4",  # or whatever model you want to use
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
