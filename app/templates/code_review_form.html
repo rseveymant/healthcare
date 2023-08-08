@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Medical Billing Codes</title>
+    <script>
+        function loadPatientData(patient) {
+            var data = {
+                'patient1': {
+                    'diagnosis': 'Patient presents with severe chest pain radiating to the left arm. Blood tests show elevated troponin levels.',
+                    'procedures': 'We performed an emergency coronary angioplasty and stent placement.',
+                    'medical_history': 'Patient has a history of hypertension and type 2 diabetes.',
+                    'clinical_notes': 'Patient is a 52 year old male with a 20 pack-year smoking history. Has been managing diabetes with metformin.',
+                    'billing_codes': 'I10, E11.9, Z79.84, F17.210, R07.2, R74.0, Z51.81, I20.0, I21.9, Z95.5'
+                }
+                // Add more patients here
+            };
+            document.getElementById('diagnosis').value = data[patient]['diagnosis'];
+            document.getElementById('procedures').value = data[patient]['procedures'];
+            document.getElementById('medical_history').value = data[patient]['medical_history'];
+            document.getElementById('clinical_notes').value = data[patient]['clinical_notes'];
+            document.getElementById('billing_codes').value = data[patient]['billing_codes'];
+        }
+    </script>
+</head>
+<body>
+    <h1>Review Medical Billing Codes</h1>
+    <form method="POST">
+        <label for="patients">Choose a patient:</label>
+        <select name="patients" id="patients" onchange="loadPatientData(this.value)">
+            <option value="">--Select a patient--</option>
+            <option value="patient1">Patient 1</option>
+            <!-- Add more options here -->
+        </select><br>
+        <label for="diagnosis">Diagnosis:</label><br>
+        <textarea id="diagnosis" name="diagnosis" rows="4" cols="50"></textarea><br>
+        <label for="procedures">Procedures:</label><br>
+        <textarea id="procedures" name="procedures" rows="4" cols="50"></textarea><br>
+        <label for="medical_history">Medical History:</label><br>
+        <textarea id="medical_history" name="medical_history" rows="4" cols="50"></textarea><br>
+        <label for="clinical_notes">Clinical Notes:</label><br>
+        <textarea id="clinical_notes" name="clinical_notes" rows="4" cols="50"></textarea><br>
+        <label for="billing_codes">Billing Codes (comma-separated):</label><br>
+        <input type="text" id="billing_codes" name="billing_codes" size="100"><br>
+        <input type="submit" value="Review Codes">
+    </form>
+</body>
+</html>
