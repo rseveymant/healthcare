@@ -5,6 +5,7 @@ import io
 from io import BytesIO
 import os
 from dotenv import load_dotenv
+from .utils.code_review import CodeReview
 
 load_dotenv()
 MANTIUM_CLIENT_ID = os.getenv("MANTIUM_CLIENT_ID")
@@ -12,6 +13,8 @@ MANTIUM_SECRET = os.getenv("MANTIUM_SECRET")
 
 gpt_service = GPTService()
 icd10_generator = ICD10Generator(MANTIUM_CLIENT_ID, MANTIUM_SECRET, gpt_service)
+code_reviewer = CodeReview(MANTIUM_CLIENT_ID, MANTIUM_SECRET, gpt_service)
+
 
 def setup_routes(app):
     @app.route('/', methods=['GET', 'POST'])
@@ -66,3 +69,29 @@ def setup_routes(app):
             return render_template('billing_codes.html', billing_code=billing_code)
 
         return render_template('billing_codes_form.html')
+    
+    @app.route('/review_billing_codes', methods=['GET', 'POST'])
+    def review_billing_codes():
+        if request.method == 'POST':
+            # Get form data
+            diagnosis = request.form.get('diagnosis', '')
+            procedures = request.form.get('procedures', '')
+            medical_history = request.form.get('medical_history', '')
+            clinical_notes = request.form.get('clinical_notes', '')
+            billing_codes_input = request.form.get('billing_codes', '')
+
+            # Parse the billing codes
+            billing_codes_list = [code.strip() for code in billing_codes_input.split(',')]
+
+            # Perform code review
+            errors, correct_codes, mismatched_codes = code_reviewer.review(billing_codes_list, {
+                'diagnosis': diagnosis,
+                'procedures': procedures,
+                'medical_history': medical_history,
+                'clinical_notes': clinical_notes
+            })
+
+            # Render the results along with the errors
+            return render_template('code_review_results.html', errors=errors, correct_codes=correct_codes, mismatched_codes=mismatched_codes)
+
+        return render_template('code_review_form.html')

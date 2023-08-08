@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Results</title>
+</head>
+<body>
+    <h1>Review Results</h1>
+    {% if errors %}
+    <h2>Identified Errors:</h2>
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No errors identified.</p>
+    {% endif %}
+</body>
+</html>
