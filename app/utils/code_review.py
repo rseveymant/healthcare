@@ -27,7 +27,7 @@ class CodeReview:
             print(rag_candidates)
             
             # Refine candidates using GPT model
-            refinement_prompt = f"Consider the original summary: {medical_data[field]} and the top result {rag_candidates['documents'][0]['content']} and return ALL relevant and correct ICD-10 code"
+            refinement_prompt = f"Consider the original summary: {medical_data[field]} and the top result from the vector database: {rag_candidates['documents'][0]['content']} and return ALL relevant and correct ICD-10 code"
             print(refinement_prompt)
             refined_answer = self.gpt_model.generate(refinement_prompt)
             print(refined_answer)
